@@ -54,22 +54,25 @@ def calculate_mass():
         labeloutput.config(text=str(total_mass))
 # Окно инструкций
 def instructions():
+    text = """В основном окне программы присутствуют поля со списком. В левом поле со списком вы можете выбрать элемент, в правом- количество атомов элемента. После выбора элемента и количества его атомов при нажатии ни кнопку добавить в строку ввода формулы добавится название элемента и количество атомов. Также можно ввести формулу вручную. При введении формулы вручную вводится название элемента из периодической таблицы Менделеева. Первая буква в названии элемента-заглавная, вторая- строчная. После ввода формулы необходимо нажать на кнопку Рассчитать и вам выведется атомная масса элемента. Инструкции по применению откроется окно, в котором вы и читаете этот текст. При нажатии на кнопку Добавить новый элемент откроется окно добавления нового элемента, в котором вы можете добавить элемент. В верхнюю строку ввода вводится название элемента, в нижнюю- атомная масса этого элемента. Название элемента может состоять не более чем из 2 букв латинского алфавита, первая буква-заглавная, вторая- строчная. Масса нового элемента не может быть отрицательной, нулевой. Для разделения числа на целую и действительную часть используетя точка. После ввода данных необходимо нажать кнопку Сохранить, в нижней строке программа выведет вам результат добавления. Если элемент успешно добавлен, его можно использовать в дальнейших вычислениях. Чтобы завершить работу программы, необходимо нажать кнопку Закрыть в основном окне."""
     global inst
     inst=Tk()
+    inst.resizable(False,False)
     inst.geometry('550x600')
     inst.title('Инструкции по применению')
-    text_to_insert="Здесь будут размещены инструкции по использованию"
-    opis=Text(inst,font=10,width=49,height=10,wrap="word")
-    opis.insert(END,text_to_insert)
-    opis.place(x=4,y=5)
-    closebutt=Button(inst,text='Закрыть окно',width=12,height=1,font=10,command=inst.destroy)
+    text_widget = Text(inst, wrap=WORD, font=('Arial', 12))
+    text_widget.pack(side=LEFT, fill=BOTH, expand=1)
+    text_widget.insert(END, text)
+    text_widget.config(state=DISABLED)
+    closebutt = Button(inst, text='Закрыть окно', width=12, height=1, font=10, command=inst.destroy)
     closebutt.place(x=400, y=500)
-# Окно добавления элементаа
+# Окно добавления элемента
 def add_new_element():
     global addwindow
     addwindow=Tk()
     addwindow.geometry('550x600')
     addwindow.title('Добавление нового элемента')
+    addwindow.resizable(False,False)
     text_add = Label(addwindow, text='Введите название элемента', bg='white', fg='black', width=40, font=12)
     text_add.place(x=50, y=5)
     entryelem = ttk.Entry(addwindow, font=10, width=40, state="normal", justify="center")
@@ -97,7 +100,7 @@ def add_new_element():
         if not new_elem[0].isupper():
             vivodstring.config(text="Неверный ввод элемента")
             return
-        if len(new_elem) > 1 and not new_elem[1].islower():
+        if len(new_elem) > 1 or not new_elem[1].islower():
             vivodstring.config(text="Неверный ввод элемента")
             return
         try:
@@ -117,15 +120,14 @@ def add_new_element():
         vivodstring.config(text="Элемент успешно добавлен")
     buttons = Button(addwindow, text='Сохранить', width=12, height=1, font=10, command=save_new_element)
     buttons.place(x=50, y=500)
-
 def close_all_window():
     window.destroy()
     inst.destroy()
     addwindow.destroy()
-
 window = Tk()
 window.geometry('550x600')
 window.title('Калькулятор молекулярных масс')
+window.resizable(False,False)
 elements_masses = read_elements_from_file('elements_masses.txt')
 label = Label(window, text='Калькулятор молекулярных масс', bg='white', fg='black', width=40, font=12)
 label.place(x=50, y=50)
@@ -144,7 +146,7 @@ button2 = Button(text='Рассчитать', width=12, height=1, font=10, comma
 button2.place(x=200, y=200)
 labeloutput = Label(bg='white', fg='black', width=40, font=12)
 labeloutput.place(x=50, y=250)
-buttonclose = Button(text='Закрыть', width=12, height=1, font=10, command=quit)
+buttonclose = Button(text='Закрыть', width=12, height=1, font=10, command=close_all_window)
 buttonclose.place(x=350, y=500)
 buttonclear = Button(text='Очистить', width=12, height=1, font=10, command=clear_entrys)
 buttonclear.place(x=350, y=200)
